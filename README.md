@@ -5,10 +5,24 @@ Live link: https://next-auth-starter-two.vercel.app/
 A Next.js 13 template for building apps with Radix UI and Tailwind CSS.
 
 ## Usage
-
 ```bash
 npx create-next-app -e https://github.com/shadcn/next-template
 ```
+
+## Run with docker
+
+* Build the image
+```bash
+docker build -t next-convex .
+```
+
+* Run the image in a container
+```bash
+docker run -p 3000:3000 next-convex
+```
+
+
+
 
 ## Features
 
