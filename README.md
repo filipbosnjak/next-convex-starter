@@ -33,9 +33,3 @@ Licensed under the [MIT license](https://github.com/shadcn/ui/blob/main/LICENSE.
 - added server components (/pages/api/auth)
 - added client components (AuthProvider.tsx)
 - wrapped root layout with AuthProvider
-
-#### DB part
-
-- npm i -D prisma react-hook-form
-- npm install @prisma/client
-- creating prisma schema and prisma client singleton

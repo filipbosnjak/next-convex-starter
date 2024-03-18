@@ -17,6 +17,9 @@ import { useRouter } from "next/navigation";
 import { RegisterResponse } from "@/app/api/register/route";
 import {SomethingWentWrongToast, SuccessfulRegistrationToast} from "@/components/ToastUtils";
 import SingInWithGithubButton from "@/components/client-components/SingInWithGithubButton";
+import {useAction, useMutation} from "convex/react";
+import {api} from "@/convex/_generated/api";
+import SingInWithGoogleButton from "@/components/client-components/SingInWithGoogleButton";
 
 export type RegisterInput = {
   email: string;
@@ -66,10 +69,6 @@ export function RegisterAuthForm({
       }
     });
   };
-
-  /*
-  console.log(watch("email"));
-*/
 
   return (
     <>
@@ -129,7 +128,7 @@ export function RegisterAuthForm({
             </span>
           </div>
         </div>
-        <SingInWithGithubButton isLoading={isLoading} />
+        <SingInWithGoogleButton isLoading={isLoading} />
       </div>
     </>
   );

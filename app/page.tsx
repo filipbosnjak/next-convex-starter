@@ -33,6 +33,12 @@ export default async function IndexPage() {
         >
           Hello
         </Link>
+        <Link
+          href="/mail"
+          className={buttonVariants({ variant: "outline" })}
+        >
+          Mail
+        </Link>
       </div>
     </section>
   )

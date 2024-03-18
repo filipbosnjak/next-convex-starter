@@ -16,6 +16,8 @@ import { redirect, useRouter } from "next/navigation";
 import {SomethingWentWrongToast} from "@/components/ToastUtils";
 import SingInWithGithubButton from "@/components/client-components/SingInWithGithubButton";
 import SingInWithGoogleButton from "@/components/client-components/SingInWithGoogleButton";
+import {api} from "@/convex/_generated/api";
+import {useAction} from "convex/react";
 
 export type LoginInput = {
   email: string;
@@ -107,8 +109,7 @@ export function LoginAuthForm({ className, ...props }: UserAuthFormProps) {
           </span>
         </div>
       </div>
-      <SingInWithGithubButton isLoading={isLoading} />
-      <SingInWithGoogleButton isLoading={isLoading} />
+      <SingInWithGoogleButton isLoading={isLoading}  />
     </div>
   );
 }

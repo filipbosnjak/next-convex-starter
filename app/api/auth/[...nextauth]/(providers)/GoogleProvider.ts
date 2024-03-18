@@ -1,43 +1,33 @@
 import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
-import prisma from "@/prisma/prisma";
+import {fetchMutation, fetchQuery} from "convex/nextjs";
+import {api} from "@/convex/_generated/api";
+import {User} from "next-auth";
 
 export const googleProvider = GoogleProvider({
+  //Google provider - if the user exists, return the user, if not, create a new user
   async profile(profile: GoogleProfile) {
-    // Connect to the database
-    // Check if a user exists in the database
-    // If so, return the user object
-    // If not, create a new user object and save it to the database
-    // Return the user object
 
-    // Here we get data from Google and we can do whatever we want with it
-
-    const foundUser = await prisma.user.findUnique({
-      where: {
-        email: profile?.email || "",
-      },
-    });
+    const foundUser = await fetchQuery(api.users.getUser, {username: profile?.email || ""})
 
     if (foundUser) {
       return {
-        id: foundUser.id.toString(),
+        id: foundUser._id.toString(),
         name: foundUser.username,
         email: foundUser.email,
         image: profile.picture,
-      };
+      } as User;
     } else {
-      const newUser = await prisma.user.create({
-        data: {
-          email: profile?.email || "",
-          username: profile?.name || profile?.login || "",
-          role: "USER",
-          domain: "google",
-        },
+      const newUser = await fetchMutation(api.users.createUser,{
+        username: profile?.email || "",
+        password: "google",
+        email: profile?.email || "",
       });
 
       return {
-        id: newUser.id.toString(),
-        name: newUser.username,
-        email: newUser.email,
+        id: newUser?._id.toString() || "",
+        username: profile?.email || "",
+        password: "google",
+        email: profile?.email || "",
         image: profile.picture,
       };
     }

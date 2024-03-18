@@ -1,6 +1,7 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import prisma from "@/prisma/prisma";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
+import {api} from "@/convex/_generated/api";
+import {fetchQuery} from "convex/nextjs";
 
 export const credentialsProvider = CredentialsProvider({
   type: "credentials",
@@ -13,12 +14,7 @@ export const credentialsProvider = CredentialsProvider({
   //@ts-ignore
   async authorize(credentials, request) {
     try {
-      const foundUser = await prisma.user.findUnique({
-        where: {
-          email: credentials?.email,
-        },
-      });
-
+      const foundUser = await fetchQuery(api.users.getUser, {username: credentials?.email || ""})
       if (foundUser) {
         // compare the password from the form with the stored password
         const passwordsMatch = await bcrypt.compare(
@@ -34,7 +30,7 @@ export const credentialsProvider = CredentialsProvider({
           name: foundUser.username,
         };
       } else {
-        return { error: "No user found" };
+        return null;
       }
     } catch (error) {
       console.log("error: ", error);

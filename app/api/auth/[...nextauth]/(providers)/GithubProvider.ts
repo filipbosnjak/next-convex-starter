@@ -1,6 +1,7 @@
 import GitHubProvider, { GithubProfile } from "next-auth/providers/github";
 import { TokenSetParameters } from "openid-client";
-import prisma from "@/prisma/prisma";
+import {fetchMutation, fetchQuery} from "convex/nextjs";
+import {api} from "@/convex/_generated/api";
 
 export const githubProvider = GitHubProvider({
   profile: async (profile: GithubProfile, tokens: TokenSetParameters) => {
@@ -10,33 +11,27 @@ export const githubProvider = GitHubProvider({
     // If not, create a new user object and save it to the database
     // Return the user object
 
-    const foundUser = await prisma.user.findUnique({
-      where: {
-        email: profile?.email || "",
-      },
-    });
+    const foundUser = await fetchQuery(api.users.getUser, {username: profile?.email || ""})
 
     if (foundUser) {
       return {
-        id: foundUser.id.toString(),
+        id: foundUser._id.toString() || "",
         name: foundUser.username,
         email: foundUser.email,
         image: profile.avatar_url,
       };
     } else {
-      const newUser = await prisma.user.create({
-        data: {
-          email: profile?.email || "",
-          username: profile?.name || profile?.login || "",
-          role: "USER",
-          domain: "github",
-        },
-      });
+      const newUser = await fetchMutation(api.users.createUser,{
+        username: profile?.email || "",
+        password: "github",
+        email: profile?.email || "",
+
+      })
 
       return {
-        id: newUser.id.toString(),
-        name: newUser.username,
-        email: newUser.email,
+        id: newUser?._id.toString() || "",
+        name: newUser?.username,
+        email: newUser?.email,
         image: profile.avatar_url,
       };
     }
