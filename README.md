@@ -21,6 +21,12 @@ docker build -t next-convex .
 docker run -p 3000:3000 next-convex
 ```
 
+## Convex
+
+To update convex functions run the following command
+```bash
+npx convex dev
+```
 
 
 
